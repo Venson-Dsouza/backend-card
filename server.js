@@ -5,6 +5,9 @@ const cors = require("cors");
 const app = express();
 
 app.use(cors());
+app.use(express.json({ limit: "2mb" }));
+app.use(express.urlencoded({ limit: "2mb" }));
+
 // Create MySQL connection
 const connection = mysql.createConnection({
   host: "sql12.freesqldatabase.com",
@@ -69,12 +72,12 @@ app.post("/api/submit", (req, res) => {
 
 // Route to handle update request
 app.put("/api/update", (req, res) => {
-  const name = req.query.name;
-  const { image } = req.body;
-  console.log(name, "name aya kya");
+  // const name = req.query.name;
+  const { image, name } = req.body;
+
   // Update data in MySQL
   const query = "UPDATE user SET image = ? WHERE name = ?";
-  connection.query(query, [name, image], (err, result) => {
+  connection.query(query, [image, name], (err, result) => {
     if (err) {
       console.error("Error updating data in MySQL:", err);
       res.status(500).json({ error: "Failed to update data in MySQL" });
